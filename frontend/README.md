@@ -9,6 +9,10 @@ npm run dev
 
 Open http://localhost:3000 in your browser.
 
+## Fonts
+
+Space Grotesk is self-hosted under `src/app/fonts/space-grotesk/`.
+
 ## Manual test checklist
 
 - Start the backend on http://localhost:4000
@@ -461,4 +465,3 @@ Columns:
 
 **Removed:**
 - localStorage operations (replaced with Supabase)
-

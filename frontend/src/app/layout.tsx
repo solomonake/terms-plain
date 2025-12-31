@@ -1,12 +1,7 @@
 import type { Metadata } from "next";
-import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import AuthNav from "@/components/AuthNav";
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-space-grotesk",
-});
+import { spaceGrotesk } from "./fonts";
 
 export const metadata: Metadata = {
   title: "Termsplain",
