@@ -2,6 +2,9 @@ import { supabase } from "./supabaseClient";
 import type { ExitListing } from "./types";
 
 export async function fetchActiveListings(): Promise<ExitListing[]> {
+  if (!supabase) {
+    return [];
+  }
   const { data, error } = await supabase
     .from("exit_listings")
     .select("*")
@@ -17,6 +20,9 @@ export async function fetchActiveListings(): Promise<ExitListing[]> {
 }
 
 export async function fetchListingById(id: string): Promise<ExitListing | null> {
+  if (!supabase) {
+    return null;
+  }
   const { data, error } = await supabase
     .from("exit_listings")
     .select("*")
@@ -35,6 +41,9 @@ export async function fetchListingById(id: string): Promise<ExitListing | null> 
 export async function createListing(
   listing: Omit<ExitListing, "id" | "created_at" | "user_id" | "status">
 ): Promise<{ data: ExitListing | null; error: any }> {
+  if (!supabase) {
+    return { data: null, error: { message: "Supabase is not configured." } };
+  }
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -59,6 +68,9 @@ export async function createListing(
 }
 
 export async function softDeleteListing(id: string): Promise<{ error: any }> {
+  if (!supabase) {
+    return { error: { message: "Supabase is not configured." } };
+  }
   const { error } = await supabase
     .from("exit_listings")
     .update({ status: "deleted" })
@@ -68,6 +80,9 @@ export async function softDeleteListing(id: string): Promise<{ error: any }> {
 }
 
 export async function checkIsOwner(listingId: string): Promise<boolean> {
+  if (!supabase) {
+    return false;
+  }
   const {
     data: { user },
   } = await supabase.auth.getUser();

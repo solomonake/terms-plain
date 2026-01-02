@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { ExitListing } from "@/lib/types";
 import { fetchActiveListings } from "@/lib/exitBoardService";
 import { fetchAppStats } from "@/lib/analytics";
+import { hasSupabaseEnv } from "@/lib/supabaseClient";
 
 type SortOption = "rent-low" | "rent-high" | "move-in" | "lease-end";
 
@@ -105,6 +106,14 @@ export default function ExitBoardPage() {
       <p className="disclaimer">
         Listings are user-posted and not verified. Subject to landlord approval.
       </p>
+      {!hasSupabaseEnv ? (
+        <div className="card">
+          <p>
+            Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and
+            NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel.
+          </p>
+        </div>
+      ) : null}
 
       <div className="cta-row" style={{ marginTop: "16px" }}>
         <Link href="/exit-board/new" className="button">

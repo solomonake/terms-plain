@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { signIn } from "@/lib/auth";
+import { hasSupabaseEnv } from "@/lib/supabaseClient";
 
 export default function SignInClient() {
   const router = useRouter();
@@ -35,7 +36,7 @@ export default function SignInClient() {
       return;
     }
 
-    if (data.session) {
+    if (data?.session) {
       router.push(next);
     }
   };
@@ -44,6 +45,14 @@ export default function SignInClient() {
     <div className="section">
       <h2>Sign In</h2>
       <p>Sign in to post and manage your Exit Board listings</p>
+      {!hasSupabaseEnv ? (
+        <div className="card">
+          <p>
+            Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and
+            NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel.
+          </p>
+        </div>
+      ) : null}
 
       <form
         className="form card"
@@ -78,7 +87,11 @@ export default function SignInClient() {
 
         {error && <p className="error">{error}</p>}
 
-        <button type="submit" className="button" disabled={isLoading}>
+        <button
+          type="submit"
+          className="button"
+          disabled={isLoading || !hasSupabaseEnv}
+        >
           {isLoading ? "Signing in..." : "Sign In"}
         </button>
 

@@ -10,6 +10,7 @@ import {
 } from "@/lib/exitBoardService";
 import type { ExitListing } from "@/lib/types";
 import { trackEvent } from "@/lib/analytics";
+import { hasSupabaseEnv } from "@/lib/supabaseClient";
 
 export default function ListingDetailPage() {
   const router = useRouter();
@@ -104,6 +105,14 @@ export default function ListingDetailPage() {
       <Link href="/exit-board" className="inline-link">
         ← Back to listings
       </Link>
+      {!hasSupabaseEnv ? (
+        <div className="card" style={{ marginTop: "16px" }}>
+          <p>
+            Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and
+            NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel.
+          </p>
+        </div>
+      ) : null}
 
       <div className="card" style={{ marginTop: "16px" }}>
         <div className="section">

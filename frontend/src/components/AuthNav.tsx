@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { hasSupabaseEnv, supabase } from "@/lib/supabaseClient";
 import { signOut } from "@/lib/auth";
 import type { User } from "@supabase/supabase-js";
 
@@ -13,6 +13,10 @@ export default function AuthNav() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!hasSupabaseEnv || !supabase) {
+      setIsLoading(false);
+      return;
+    }
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       setIsLoading(false);

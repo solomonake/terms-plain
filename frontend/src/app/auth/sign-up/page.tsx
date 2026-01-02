@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { FormEvent } from "react";
 import { signUp } from "@/lib/auth";
+import { hasSupabaseEnv } from "@/lib/supabaseClient";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -43,15 +44,25 @@ export default function SignUpPage() {
       return;
     }
 
-    if (data.user) {
+    if (data?.user) {
       router.push("/exit-board");
     }
+
+    setIsLoading(false);
   };
 
   return (
     <div className="section">
       <h2>Sign Up</h2>
       <p>Create an account to post Exit Board listings</p>
+      {!hasSupabaseEnv ? (
+        <div className="card">
+          <p>
+            Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and
+            NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel.
+          </p>
+        </div>
+      ) : null}
 
       <form className="form card" onSubmit={handleSubmit} style={{ maxWidth: "480px" }}>
         <div className="section">
@@ -95,7 +106,11 @@ export default function SignUpPage() {
 
         {error && <p className="error">{error}</p>}
 
-        <button type="submit" className="button" disabled={isLoading}>
+        <button
+          type="submit"
+          className="button"
+          disabled={isLoading || !hasSupabaseEnv}
+        >
           {isLoading ? "Creating account..." : "Sign Up"}
         </button>
 

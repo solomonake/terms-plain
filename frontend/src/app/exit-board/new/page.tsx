@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { FormEvent, ChangeEvent } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { hasSupabaseEnv, supabase } from "@/lib/supabaseClient";
 import { createListing } from "@/lib/exitBoardService";
 import { trackEvent } from "@/lib/analytics";
 
@@ -46,6 +46,11 @@ export default function NewExitPage() {
   }, []);
 
   const checkAuth = async () => {
+    if (!hasSupabaseEnv || !supabase) {
+      setIsCheckingAuth(false);
+      setIsAuthenticated(false);
+      return;
+    }
     const { data: { session } } = await supabase.auth.getSession();
     if (!session) {
       router.push("/auth/sign-in?next=/exit-board/new");
@@ -211,6 +216,14 @@ export default function NewExitPage() {
       <h2>Post an Exit</h2>
       <p>List your lease so someone can take it over.</p>
       <p className="disclaimer">This is for information, not legal advice</p>
+      {!hasSupabaseEnv ? (
+        <div className="card">
+          <p>
+            Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and
+            NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel.
+          </p>
+        </div>
+      ) : null}
 
       <form className="form card" onSubmit={handleSubmit}>
         <div className="section">
@@ -473,7 +486,11 @@ export default function NewExitPage() {
         )}
 
         <div className="cta-row">
-          <button type="submit" className="button">
+          <button
+            type="submit"
+            className="button"
+            disabled={!hasSupabaseEnv}
+          >
             Post Listing
           </button>
           <button

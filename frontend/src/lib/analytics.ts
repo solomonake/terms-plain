@@ -33,6 +33,9 @@ export const trackEvent = async (args: {
   listingId?: string;
 }) => {
   try {
+    if (!supabase) {
+      return;
+    }
     const sessionId = getSessionId();
     const { error } = await supabase.from("app_events").insert({
       event_type: args.type,
@@ -50,6 +53,13 @@ export const trackEvent = async (args: {
 
 export const fetchAppStats = async () => {
   try {
+    if (!supabase) {
+      return {
+        leasesAnalyzed: 0,
+        listingsCreated: 0,
+        listingsViewed: 0,
+      };
+    }
     const { data, error } = await supabase.rpc("get_app_stats");
     if (error || !data) {
       return {
