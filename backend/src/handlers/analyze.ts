@@ -8,7 +8,7 @@ import { generateAnalyzeSummary } from "../ai/gemini";
 const MAX_LEASE_CHARS = 20000;
 
 export async function analyzeHandler(req: Request, res: Response) {
-  const { text } = req.body;
+  const { text } = req.body ?? {};
 
   if (isEmpty(text)) {
     return res.status(400).json({ error: "Lease text is required." });

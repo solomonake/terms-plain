@@ -18,9 +18,9 @@ import routes from "./routes";
 
 const FALLBACK_BULLET_COUNT = 4;
 
-// Same JSON parsing and route mounting as src/server.ts. That file starts
-// listening when imported and does not export the app, so its CORS, rate
-// limit and error handler wiring are not covered here.
+// JSON parsing and route mounting only, with a fresh app per request. The
+// full app (CORS, rate limit, error handler) is covered in
+// app.inputHardening.test.ts.
 const createApp = () => {
   const app = express();
   app.use(express.json({ limit: "2mb" }));
@@ -184,7 +184,16 @@ describe("POST /analyze over HTTP with the Gemini call stubbed", () => {
     expect(response.body).not.toHaveProperty("truncated");
   });
 
-  it.todo(
-    "answers 400 when text is not a string (today the handler throws, the request gets no response and the server process exits)"
-  );
+  it("answers 400 when text is not a string, without an AI call", async () => {
+    const app = createApp();
+
+    const numeric = await request(app).post("/analyze").send({ text: 123 });
+    const list = await request(app).post("/analyze").send({ text: ["a lease"] });
+
+    for (const response of [numeric, list]) {
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ error: "Lease text is required." });
+    }
+    expect(generateContent).not.toHaveBeenCalled();
+  });
 });

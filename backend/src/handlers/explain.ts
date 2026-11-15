@@ -7,7 +7,7 @@ import { generateExplainClause } from "../ai/gemini";
 const MAX_CLAUSE_CHARS = 8000;
 
 export async function explainHandler(req: Request, res: Response) {
-  const { clause } = req.body;
+  const { clause } = req.body ?? {};
 
   if (isEmpty(clause)) {
     return res.status(400).json({ error: "Clause text is required." });
