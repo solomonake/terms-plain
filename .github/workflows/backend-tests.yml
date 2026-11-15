@@ -1,0 +1,50 @@
+name: Backend tests
+
+# Runs the backend type check, build and test suite on every pull request and
+# on every push to main. The tests replace the Gemini SDK with a stand-in, so
+# no API key or other secret is needed here.
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backend-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Build and test (Node 20)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      # Empty on purpose: the server treats an empty key as missing, so no
+      # step in this job can reach the real API.
+      GEMINI_API_KEY: ""
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies from the lockfile
+        run: npm ci
+
+      - name: Type check and build
+        run: npm run build
+
+      - name: Run the tests
+        run: npm test

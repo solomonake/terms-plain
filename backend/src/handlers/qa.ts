@@ -8,7 +8,7 @@ const MAX_QUESTION_CHARS = 500;
 const MAX_LEASE_CHARS = 20000;
 
 export async function qaHandler(req: Request, res: Response) {
-  const { question, text } = req.body;
+  const { question, text } = req.body ?? {};
 
   if (isEmpty(question)) {
     return res.status(400).json({ error: "Question is required." });
