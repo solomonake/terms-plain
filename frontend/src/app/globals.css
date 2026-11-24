@@ -426,3 +426,11 @@ input[type="checkbox"] {
 @media (max-width: 720px) {
   .nav, .nav-links { gap: 4px; }
 }
+
+.lease-preview p a, .lease-finding a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+#hud-example { scroll-margin-top: 1rem; }

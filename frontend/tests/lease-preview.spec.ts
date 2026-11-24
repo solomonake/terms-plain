@@ -22,6 +22,12 @@ for (const [width, height] of [[390, 844], [768, 1024], [1440, 900]]) {
     const audit = await new AxeBuilder({ page }).analyze();
     expect(audit.violations.filter(v => ["serious", "critical"].includes(v.impact ?? ""))).toEqual([]);
     await page.screenshot({ path: info.outputPath(`home-${width}.png`) });
+    const publishedLink = page.getByRole("link", { name: "see a clause from a HUD lease" });
+    await expect(publishedLink).toBeInViewport({ ratio: 1 });
+    await publishedLink.click();
+    const published = page.getByRole("figure", { name: /Published example/ });
+    await expect(published).toBeFocused();
+    await expect(published).toBeInViewport({ ratio: 1 });
   });
 }
 
@@ -74,4 +80,19 @@ test("disclaimer meets 4.5 to 1 contrast on its form", async ({ page }) => {
   const contrast = (light + 0.05) / (dark + 0.05);
   console.log(`Disclaimer contrast ${contrast.toFixed(2)}:1 (${colors.join(" on ")})`);
   expect(contrast).toBeGreaterThanOrEqual(4.5);
+});
+
+test("published HUD example reproduces the detector's finding and evidence", async ({ page }) => {
+  await page.goto("/");
+  const example = page.getByRole("figure", { name: /Published example · HUD model lease/ });
+  const clause = "The Tenant agrees not to: a. Sublet or assign the unit or any part of the unit;";
+  await expect(example.locator("blockquote")).toHaveText(clause);
+  const flags = detectFlags(clause);
+  expect(flags).toHaveLength(1);
+  expect(flags[0].id).toBe("sublease-restriction");
+  await expect(example.locator("strong")).toHaveText(flags[0].label);
+  await expect(example.locator("blockquote")).toHaveText(flags[0].evidenceSnippet);
+  await expect(example.getByRole("link", { name: /section 17\(a\), page 7/ })).toHaveAttribute(
+    "href", "https://www.hud.gov/sites/dfiles/OCHCO/documents/90105a.pdf#page=7"
+  );
 });

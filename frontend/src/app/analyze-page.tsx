@@ -99,9 +99,9 @@ export default function AnalyzePage() {
     <div className="section">
       <section className="lease-preview" aria-labelledby="lease-heading">
         <h1 id="lease-heading">See what a lease could cost you</h1>
-        <p>For renters who want to check fees against the fine print.</p>
+        <p>Check a sample fee below or <a href="#hud-example">see a clause from a HUD lease</a>.</p>
         <figure className="lease-note">
-          <figcaption>Sample lease · Clause 3 · Late fees</figcaption>
+          <figcaption>Sample lease · Clause 3 · Late fees (fictional)</figcaption>
           <blockquote>{SAMPLE_LATE_FEE_CLAUSE}</blockquote>
           <div className="lease-finding">
             <strong>Late fee charges</strong>
@@ -109,6 +109,17 @@ export default function AnalyzePage() {
           </div>
         </figure>
         <a className="button" href="#lease-text">Check my lease</a>
+        <figure className="lease-note" id="hud-example" tabIndex={-1}>
+          <figcaption>Published example · HUD model lease for subsidized programs</figcaption>
+          <blockquote>The Tenant agrees not to: a. Sublet or assign the unit or any part of the unit;</blockquote>
+          <div className="lease-finding">
+            <strong>Subleasing restrictions</strong>
+            <p>Under this clause, you cannot rent out even one room or transfer the lease to someone else.</p>
+            <a href="https://www.hud.gov/sites/dfiles/OCHCO/documents/90105a.pdf#page=7">
+              Read HUD form 90105-A, section 17(a), page 7 (PDF)
+            </a>
+          </div>
+        </figure>
       </section>
       <h2>Analyze your lease</h2>
       <form className="form card" onSubmit={handleSubmit}>
