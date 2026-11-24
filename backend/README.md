@@ -211,5 +211,5 @@ All trimming is character-based (not word-based) and occurs after `.trim()` is a
 - Rate limit: 30 requests/minute per IP in dev
 - Gemini responses are cached in-memory for 10 minutes and reset on server restart
 - Designed to support Gemini integration later without refactoring
-- CORS enabled for `http://localhost:3000`
+- CORS always accepts the live site (`https://www.termsplain.com`, `https://termsplain.com`, `https://terms-plain.vercel.app`). `FRONTEND_URL` adds one origin or a comma-separated list; when it is unset, `http://localhost:3000` is accepted instead.
 - JSON body limit: 2MB
