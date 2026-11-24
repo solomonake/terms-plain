@@ -1,6 +1,9 @@
+export const SAMPLE_LATE_FEE_CLAUSE =
+  "If rent is not received by the 5th, a late fee of $75 applies plus $10 per day.";
+
 export const SAMPLE_LEASE_TEXT = `1. Term. The lease begins on June 1, 2025 and ends on May 31, 2026.
 2. Rent. Tenant will pay $2,100 per month on the 1st day of each month.
-3. Late Fees. If rent is not received by the 5th, a late fee of $75 applies plus $10 per day.
+3. Late Fees. ${SAMPLE_LATE_FEE_CLAUSE}
 4. Security Deposit. Tenant paid a $1,500 security deposit.
 5. Deposit Deductions. Landlord may deduct for unpaid rent, cleaning, or damage beyond normal wear.
 6. Return of Deposit. Any remaining deposit will be returned within 30 days.
